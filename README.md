@@ -38,3 +38,4 @@ This project simulates a chat room using Transmission Control Protocol
 
 ## Quit command
 - We send the quit command to the server
+![image](https://user-images.githubusercontent.com/87490580/208290234-b0c6d2be-ea69-4e06-91f5-1a9033e551c0.png)
