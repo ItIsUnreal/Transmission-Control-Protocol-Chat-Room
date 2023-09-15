@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 
 public class InputHandler implements Runnable {
 
-    private Client client;
+    private final Client client;
 
     public InputHandler(Client client) {
         this.client = client;

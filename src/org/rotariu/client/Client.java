@@ -8,18 +8,13 @@ import java.net.Socket;
 
 public class Client {
 
-    private final String host;
-    private final int port;
-
-    private BufferedReader reader;
-    private PrintWriter printer;
+    private final BufferedReader reader;
+    private final PrintWriter printer;
 
     private final Socket socket;
     private boolean isActive;
 
     public Client(String host, int port) throws IOException {
-        this.host = host;
-        this.port = port;
         this.socket = new Socket(host, port);
         printer = new PrintWriter(socket.getOutputStream(), true);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
