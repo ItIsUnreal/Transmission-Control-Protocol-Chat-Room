@@ -1,4 +1,4 @@
-package org.rotariu;
+package org.rotariu.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server implements Runnable{
+public class Server implements Runnable {
 
     private ArrayList<ConnectionHandler> connections;
     private ServerSocket server;
@@ -26,8 +26,11 @@ public class Server implements Runnable{
     public void run() {
         try {
             server = new ServerSocket(9989);
+            PrintWriter print = new PrintWriter(System.out);
+            print.print("Server started");
+            print.close();
             pool = Executors.newCachedThreadPool();
-            while(!done) {
+            while (!done) {
                 Socket client = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(client);
                 connections.add(handler);
@@ -39,9 +42,9 @@ public class Server implements Runnable{
 
     }
 
-    public void broadcast(String message){
-        for (ConnectionHandler ch : connections){
-            if (ch != null){
+    public void broadcast(String message) {
+        for (ConnectionHandler ch : connections) {
+            if (ch != null) {
                 ch.sendMessage(message);
             }
         }
@@ -53,10 +56,10 @@ public class Server implements Runnable{
             if (!server.isClosed()) {
                 server.close();
             }
-            for (ConnectionHandler ch : connections){
+            for (ConnectionHandler ch : connections) {
                 ch.shutdown();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             // ignore
         }
     }
@@ -69,7 +72,7 @@ public class Server implements Runnable{
         private PrintWriter out;
         private String nickname;
 
-        public ConnectionHandler(Socket client){
+        public ConnectionHandler(Socket client) {
             this.client = client;
         }
 
@@ -83,10 +86,10 @@ public class Server implements Runnable{
                 System.out.println(nickname + " connected!");
                 broadcast(nickname + " Joined the chat!");
                 String message;
-                while ((message = in.readLine()) != null){
+                while ((message = in.readLine()) != null) {
                     if (message.startsWith("/nick")) {
                         String[] messageSplit = message.split(" ", 2);
-                        if(messageSplit.length == 2){
+                        if (messageSplit.length == 2) {
                             broadcast(nickname + "Renamed themselves to: " + messageSplit[1]);
                             System.out.println(nickname + "Renamed themselves to: " + messageSplit[1]);
                             nickname = messageSplit[1];
@@ -94,10 +97,10 @@ public class Server implements Runnable{
                         } else {
                             out.println("No nickname provided!");
                         }
-                    }else if (message.startsWith("/quit")){
+                    } else if (message.startsWith("/quit")) {
                         broadcast(nickname + " left the chat!");
                         shutdown();
-                    }else{
+                    } else {
                         broadcast(nickname + ": " + message);
                     }
                 }
@@ -105,7 +108,8 @@ public class Server implements Runnable{
                 // TODO: handle
             }
         }
-        public void sendMessage(String message){
+
+        public void sendMessage(String message) {
             out.println(message);
         }
 
@@ -118,7 +122,7 @@ public class Server implements Runnable{
                 if (!client.isClosed()) {
                     client.close();
                 }
-            }catch (IOException e){
+            } catch (IOException e) {
                 // ignore
             }
         }
